@@ -1,0 +1,52 @@
+.report-container {
+  padding: 0 1rem 1rem;
+  max-height: calc(100vh - 7rem);
+  overflow-y: auto;
+  position: relative;
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background-color: #555;
+      color: #fff;
+      width: 20%;
+      ::ng-deep .mat-sort-header-arrow {
+        color: #fff;
+      }
+    }
+    ::ng-deep tbody tr {
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      &:nth-child(odd) {
+        background-color: #f7fcff;
+      }
+      &:hover {
+        background-color: #f5f5f5;
+      }
+    }
+  }
+
+  &__chart-wrapper {
+    width: 90%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    app-chart {
+      max-height: 100px;
+    }
+    h1 {
+      color: #00aeff;
+      margin-bottom: 0.5rem;
+    }
+  }
+}

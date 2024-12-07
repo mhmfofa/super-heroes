@@ -1,0 +1,59 @@
+<div class="dialog">
+  @if(dialogMode === dialogModeEnum.Details){
+    <h1 mat-dialog-title class="dialog__header">
+      <span>Hero Details</span> 
+      <mat-icon mat-dialog-close class="dialog__header-close-button">cancel</mat-icon></h1>
+    <div mat-dialog-content class="dialog__content">
+      <p><strong>Id (auto generated):</strong> {{ data.hero?.id }}</p>
+      <p><strong>Gender:</strong> {{ data.hero?.genderLabel }}</p>
+      <p><strong>Citizenship:</strong> {{ data.hero?.citizenshipLabel }}</p>
+      <p><strong>Skills:</strong> {{ data.hero?.skillsLabel }}</p>
+      <p><strong>Occupation:</strong> {{ data.hero?.occupationLabel }}</p>
+      <p><strong>Member Of:</strong> {{ data.hero?.memberOfLabel }}</p>
+      <p><strong>Creator:</strong> {{ data.hero?.creatorLabel }}</p>
+    </div>
+    } @else {
+      <h1 mat-dialog-title class="dialog__header">{{dialogMode === dialogModeEnum.Add ? 'Create New Hero': 'Edit Hero'}}</h1>
+      <div mat-dialog-content>
+        <form *ngIf="heroForm" [formGroup]="heroForm">
+          <mat-form-field>
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="nameLabel" />
+            <mat-error *ngIf="heroForm.get('nameLabel')?.invalid">
+              Name is required
+            </mat-error>
+          </mat-form-field>
+    
+          <mat-form-field>
+            <mat-label>Gender</mat-label>
+            <input matInput formControlName="genderLabel" />
+            <mat-error *ngIf="heroForm.get('genderLabel')?.invalid">
+              Gender is required
+            </mat-error>
+          </mat-form-field>
+    
+          <mat-form-field>
+            <mat-label>Citizenship</mat-label>
+            <input matInput formControlName="citizenshipLabel" />
+            <mat-error *ngIf="heroForm.get('citizenshipLabel')?.invalid">
+              Citizenship is required
+            </mat-error>
+          </mat-form-field>
+    
+          <mat-form-field>
+            <mat-label>Skills</mat-label>
+            <input matInput formControlName="skillsLabel" />
+            <mat-error *ngIf="heroForm.get('skillsLabel')?.invalid">
+              Skills are required
+            </mat-error>
+          </mat-form-field>
+        </form>
+      </div>
+      <div mat-dialog-actions class="dialog__footer">
+        <button mat-button mat-dialog-close>Cancel</button>
+        <button mat-raised-button color="primary" [disabled]="heroForm?.invalid" (click)="onSave()">Add Hero</button>
+      </div>
+        }
+
+
+</div>

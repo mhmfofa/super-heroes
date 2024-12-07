@@ -1,1 +1,27 @@
-/* You can add global styles to this file, and also import other style files */
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.dialog {
+  &__header {
+    background-color: #555;
+    color: #fff !important;
+    padding: 0.5rem 1rem !important;
+    display: flex !important;
+    align-items: center;
+
+    &-close-button {
+      margin-left: auto !important;
+      cursor: pointer;
+    }
+  }
+  &__footer {
+    display: flex;
+    justify-content: center !important;
+  }
+}

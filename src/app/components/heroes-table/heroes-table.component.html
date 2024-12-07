@@ -1,0 +1,56 @@
+<div class="report-container">
+  <table mat-table [dataSource]="dataSource" matSort class="report-container__table">
+    <ng-container matColumnDef="nameLabel">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+      <td mat-cell *matCellDef="let hero">{{ hero.nameLabel }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="genderLabel">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Gender </th>
+      <td mat-cell *matCellDef="let hero">{{ hero.genderLabel }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="citizenshipLabel">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Citizenship </th>
+      <td mat-cell *matCellDef="let hero">{{ hero.citizenshipLabel }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="skillsLabel">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Skills </th>
+      <td mat-cell *matCellDef="let hero">{{ hero.skillsLabel }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Actions </th>
+      <td mat-cell *matCellDef="let hero">
+        <button mat-icon-button (click)="onEditHero(hero, $event)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button (click)="onDeleteHero(hero, $event)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumnsChart"></tr>
+
+    <ng-container *ngFor="let col of displayedColumnsChart" matColumnDef="{{ col }}">
+      <td mat-header-cell *matHeaderCellDef>
+        <div class="report-container__chart-wrapper">
+          @if(col === 'nameLabel_chart'){
+          <h1>{{getColumnUniqueValues('nameLabel').size}}</h1>
+          <span>unique values</span>
+          }
+          @else if(col !== 'actions_chart'){
+          <app-chart [chartData]="chartDataCache[col] || getChartData(col)"></app-chart>}
+        </div>
+      </td>
+    </ng-container>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      (click)="onOpenHeroDetails(row)"
+    ></tr>
+  </table>
+</div>

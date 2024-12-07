@@ -1,0 +1,30 @@
+.header {
+  display: flex;
+  .chips-container {
+    flex-grow: 1;
+    margin-bottom: 0.5rem;
+
+    &__search {
+      width: 100%;
+    }
+
+    &__chip {
+      margin: 0 4px;
+      border: solid 1px #aaa;
+    }
+  }
+  &__btn-add {
+    cursor: pointer;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+  }
+  mat-chip-grid {
+    height: 34px;
+  }
+}
+
+.spinner {
+  display: block;
+  margin: 20px auto;
+}
