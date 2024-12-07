@@ -1,0 +1,40 @@
+name: Build and Deploy Angular App to GitHub Pages
+
+on:
+  push:
+    branches:
+      - master  # Trigger the workflow on push to master branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository code
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'  # Replace with your node version if necessary
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          npm install
+
+      # Build the Angular app
+      - name: Build Angular app
+        run: |
+          npm run build -- --prod  # Use the `--prod` flag to optimize for production
+
+      # Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4.1.0
+        with:
+          branch: gh-pages  # The branch to deploy to
+          folder: dist/super-heroes  # Path to the build folder (usually `dist/your-project-name`)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Automatically provided by GitHub Actions
