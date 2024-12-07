@@ -51,7 +51,7 @@
       </div>
       <div mat-dialog-actions class="dialog__footer">
         <button mat-button mat-dialog-close>Cancel</button>
-        <button mat-raised-button color="primary" [disabled]="heroForm?.invalid" (click)="onSave()">Add Hero</button>
+        <button mat-raised-button color="primary" [disabled]="heroForm?.invalid" (click)="onSave()">{{dialogMode === dialogModeEnum.Add ? 'Add': 'Edit'}}</button>
       </div>
         }
 
