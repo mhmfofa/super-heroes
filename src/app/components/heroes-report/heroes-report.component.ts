@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DataProviderService } from '../../services';
@@ -6,11 +6,11 @@ import { ChartDataModel, HeroModel } from '../../models';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatInputModule } from '@angular/material/input';
 import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
-import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableDataSource } from '@angular/material/table';
-import { NgFor, NgIf } from '@angular/common';
+import { NgFor } from '@angular/common';
 import { Subject, delay, takeUntil } from 'rxjs';
 import { HeroDialogComponent } from '../hero-dialog/hero-dialog.component';
 import { generateUniqueId } from '../../utils';
@@ -25,7 +25,6 @@ import { HeroesTableComponent } from '../heroes-table/heroes-table.component';
   imports: [
     NgFor,
     MatTableModule,
-    MatSortModule,
     MatChipsModule,
     MatDialogModule,
     MatProgressSpinnerModule,
@@ -43,7 +42,6 @@ export class HeroesReportComponent implements OnInit, OnDestroy {
   chips: string[] = [];
   separatorKeysCodes: number[] = [ENTER, COMMA];
   loading: boolean = true;
-  displayedColumns1: string[] = ['position', 'name', 'weight', 'symbol'];
 
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -60,9 +58,9 @@ export class HeroesReportComponent implements OnInit, OnDestroy {
       .pipe(delay(2000), takeUntil(this.destroy$))
       .subscribe((heroes: HeroModel[]) => {
         this.allHeroes = heroes;
-        this.filteredHeroes.data = this.allHeroes;
+        this.applyFilters(); // Ensure the filters are applied when the data is loaded
         this.loading = false;
-        this.cdr.detectChanges()
+        this.cdr.detectChanges();
         this.filteredHeroes.sort = this.sort;
       });
   }
@@ -71,7 +69,7 @@ export class HeroesReportComponent implements OnInit, OnDestroy {
     const value = (event.value || '').trim();
     if (value) {
       this.chips.push(value);
-      this.applyFilters();
+      this.applyFilters(); // Reapply the filters after adding a chip
     }
     event.chipInput!.clear();
   }
@@ -81,7 +79,7 @@ export class HeroesReportComponent implements OnInit, OnDestroy {
     const index = this.chips.indexOf(chip);
     if (index !== -1) {
       this.chips[index] = newChip;
-      this.applyFilters();
+      this.applyFilters(); // Reapply the filters after editing a chip
     }
   }
 
@@ -89,7 +87,7 @@ export class HeroesReportComponent implements OnInit, OnDestroy {
     const index = this.chips.indexOf(chip);
     if (index >= 0) {
       this.chips.splice(index, 1);
-      this.applyFilters();
+      this.applyFilters(); // Reapply the filters after removing a chip
     }
   }
 
@@ -118,11 +116,11 @@ export class HeroesReportComponent implements OnInit, OnDestroy {
       width: '400px',
       data: { hero, dialogMode: DialogModeEnum.Edit },
     });
-  
+
     dialogRef.afterClosed().subscribe((updatedHero: HeroModel | undefined) => {
       if (updatedHero) {
-        this.allHeroes = this.allHeroes.map(h => h.id === updatedHero.id ? updatedHero : h); 
-        this.filteredHeroes.data = this.allHeroes;
+        this.allHeroes = this.allHeroes.map(h => h.id === updatedHero.id ? updatedHero : h);
+        this.applyFilters(); // Reapply the filters after editing a hero
       }
     });
   }
@@ -131,24 +129,24 @@ export class HeroesReportComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     if (confirm(`Are you sure you want to delete ${hero.nameLabel}?`)) {
       this.allHeroes = this.allHeroes.filter(h => h.id !== hero.id);
-      this.applyFilters();
+      this.applyFilters(); // Reapply the filters after deleting a hero
       this.dataProviderService.saveHeroes(this.allHeroes);
     }
   }
 
   createHero(): void {
     const dialogRef = this.dialog.open(HeroDialogComponent, {
-    width: '400px',
-    data: { dialogMode: DialogModeEnum.Add },
-  });
+      width: '400px',
+      data: { dialogMode: DialogModeEnum.Add },
+    });
 
-  dialogRef.afterClosed().subscribe((result: HeroModel | undefined) => {
-    if (result) {
-      const newHero = { ...result, id: generateUniqueId() };
-      this.allHeroes = [newHero, ...this.allHeroes]; 
-      this.filteredHeroes.data = this.allHeroes;
-    }
-  });
+    dialogRef.afterClosed().subscribe((result: HeroModel | undefined) => {
+      if (result) {
+        const newHero = { ...result, id: generateUniqueId() };
+        this.allHeroes = [newHero, ...this.allHeroes];
+        this.applyFilters(); // Reapply the filters after adding a new hero
+      }
+    });
   }
 
   getColumnUniqueValues(columnName: string): Set<string> {
@@ -179,7 +177,6 @@ export class HeroesReportComponent implements OnInit, OnDestroy {
 
     return chartData;
   }
-
 
   getColumnData(columnName: keyof HeroModel): any[] {
     return this.allHeroes.map(hero => hero[columnName]);
